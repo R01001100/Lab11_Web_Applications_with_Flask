@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- this version is only a frontend demo/mimic of the original Flask application -->
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity 11 Flask Web App</title>
+    <style>
+        /* copy of style.css */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #F8F8F8;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 16px;
+            color: #44443B;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        nav {
+            background-color: #44443B;
+            color: #EC7A1C;
+            padding: 15px 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        nav a {
+            color: #EC7A1C;
+            text-decoration: none;
+            margin-right: 20px;
+            font-weight: 500;
+            transition: color 0.3s ease, border-bottom 0.3s ease;
+            cursor: pointer;
+        }
+
+        nav a:hover {
+            color: #FF8C42;
+            border-bottom: 2px solid #EC7A1C;
+            padding-bottom: 4px;
+        }
+
+        header {
+            background-color: #9B806E;
+            text-align: center;
+            padding: 20px;
+            color: #44443B;
+        }
+
+        header img {
+            width: 80px;
+            height: auto;
+            margin-bottom: 10px;
+        }
+
+        header h1 {
+            color: #44443B;
+            font-size: 1.8rem;
+        }
+
+        main {
+            background-color: #FFFFFF;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            padding: 25px;
+            margin-top: 25px;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        h2 {
+            color: #44443B;
+            margin-bottom: 20px;
+            border-left: 4px solid #EC7A1C;
+            padding-left: 15px;
+        }
+
+        /* Flash messages - red text as in base.html */
+        .flash-message {
+            background-color: #F0E6D8;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            color: red;
+            border-left: 4px solid #EC7A1C;
+        }
+
+        .welcome-message {
+            background-color: #F0E6D8;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            color: #44443B;
+            border-left: 4px solid #EC7A1C;
+        }
+
+        form {
+            background-color: #FEFCF8;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #E0D6C8;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        form label {
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #44443B;
+        }
+
+        form input[type="text"],
+        form input[type="email"],
+        form input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #CCC5B8;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background-color: #FFFFFF;
+        }
+
+        form input:focus {
+            border-color: #EC7A1C;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(236, 122, 28, 0.1);
+        }
+
+        form button,
+        form input[type="submit"] {
+            background-color: #90462C;
+            color: #E6E4E0;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        form button:hover,
+        form input[type="submit"]:hover {
+            background-color: #EC7A1C;
+        }
+
+        .student-list {
+            list-style: none;
+            margin-top: 20px;
+        }
+
+        .student-list li {
+            padding: 12px;
+            border-bottom: 1px solid #E0D6C8;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .student-list li:hover {
+            background-color: #FEFCF8;
+        }
+
+        .student-name {
+            font-weight: bold;
+        }
+
+        .delete-btn {
+            background-color: #90462C;
+            color: #E6E4E0;
+            padding: 5px 12px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: background-color 0.3s ease;
+            cursor: pointer;
+            border: none;
+        }
+
+        .delete-btn:hover {
+            background-color: #EC7A1C;
+        }
+
+        .add-student-form {
+            background-color: #FEFCF8;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #E0D6C8;
+            margin-bottom: 30px;
+        }
+
+        .add-student-form input {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #CCC5B8;
+        }
+
+        .add-student-form button {
+            background-color: #90462C;
+            color: #E6E4E0;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .add-student-form button:hover {
+            background-color: #EC7A1C;
+        }
+
+        .total-count {
+            margin-bottom: 20px;
+            font-weight: bold;
+            padding: 10px;
+            background-color: #F0E6D8;
+            border-radius: 8px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 10px;
+            margin-top: 25px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #CCC5B8;
+            border-radius: 8px;
+        }
+
+        .btn-primary {
+            background-color: #90462C;
+            color: #E6E4E0;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #EC7A1C;
+        }
+
+        @media (max-width: 768px) {
+            nav a {
+                display: inline-block;
+                margin-bottom: 10px;
+                margin-right: 15px;
+            }
+
+            main {
+                padding: 15px;
+                margin: 15px;
+            }
+
+            .student-list li {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <img src="static/images/TUP.png" alt="TUP Logo">
+        <h1>Activity 11 Flask Web App</h1>
+    </header>
+
+    <nav>
+        <a onclick="showPage('home')">Home</a>
+        <a onclick="showPage('about')">About</a>
+        <a onclick="showPage('contact')">Contact</a>
+        <span id="nav-auth-links">
+            <a onclick="showPage('login')">Login</a>
+            <a onclick="showPage('register')">Register</a>
+        </span>
+        <span id="nav-protected-links" style="display: none;">
+            <a onclick="showPage('students')">Students</a>
+            <a onclick="logout()">Logout</a>
+        </span>
+    </nav>
+
+    <main>
+        <!-- Flash Messages Container (Data & Obs #11 - red color) -->
+        <div id="flash-container"></div>
+
+        <!-- Welcome User Message (Data & Obs #19) -->
+        <div id="welcome-user" style="display: none;"></div>
+
+        <!-- HOME PAGE -->
+        <div id="page-home" class="page active">
+            <h2>Hello, I am Ruselle Laude!</h2>
+            <p>Section: BSECE 1C</p>
+            <h2>Welcome, student!</h2>
+            <p>This app was built using Flask and Jinja2 templates.</p>
+        </div>
+
+        <!-- ABOUT PAGE -->
+        <div id="page-about" class="page">
+            <h2>About This App</h2>
+            <p>This Flask app demonstrates user login, database integration, and template rendering.</p>
+        </div>
+
+        <!-- CONTACT PAGE -->
+        <div id="page-contact" class="page">
+            <h2>Contact Us</h2>
+            <p>Email: rusellerae.laude@tup.edu.ph</p>
+        </div>
+
+        <!-- LOGIN PAGE (Data & Obs #2 - placeholders) -->
+        <div id="page-login" class="page">
+            <h2>Login</h2>
+            <form id="login-form" onsubmit="handleLogin(event)">
+                <div>
+                    <label>Email</label>
+                    <input type="email" id="login-email" placeholder="Enter your email" required>
+                </div>
+                <div>
+                    <label>Password</label>
+                    <input type="password" id="login-password" placeholder="Enter your password" required>
+                </div>
+                <button type="submit">Login</button>
+            </form>
+        </div>
+
+        <!-- REGISTER PAGE (Data & Obs #1, #8, #12, #14, #15, #17) -->
+        <div id="page-register" class="page">
+            <h2>Create a New Account</h2>
+            <p>Please fill in the details below:</p>
+            <form id="register-form" onsubmit="handleRegister(event)">
+                <div>
+                    <label>Email</label>
+                    <input type="email" id="register-email" class="input-field" placeholder="student@tup.edu.ph"
+                        maxlength="50" value="student@tup.edu.ph" required>
+                    <small>Your school email address</small>
+                </div>
+                <div>
+                    <label>Password</label>
+                    <input type="password" id="register-password" placeholder="Enter your password" minlength="4"
+                        required>
+                </div>
+                <button type="submit" class="btn-primary">Register</button>
+            </form>
+        </div>
+
+        <!-- STUDENTS PAGE (Data & Obs #4, #5, #6) -->
+        <div id="page-students" class="page">
+            <h2>Student List</h2>
+            <div id="student-count" class="total-count">Total Students: 0</div>
+
+            <div class="add-student-form">
+                <form id="add-student-form" onsubmit="addStudent(event)">
+                    <input type="text" name="name" placeholder="Full Name" id="student-name" required>
+                    <input type="email" name="email" placeholder="Email" id="student-email" required>
+                    <button type="submit">Add Student</button>
+                </form>
+            </div>
+
+            <ul id="student-list" class="student-list"></ul>
+        </div>
+    </main>
+
+    <footer>
+        &copy; 2026 Flask Activity
+    </footer>
+
+    <script>
+        // DATA STORAGE (localStorage for persistence)
+        let users = JSON.parse(localStorage.getItem('flask_users') || '[]');
+        let currentUser = JSON.parse(localStorage.getItem('flask_current_user') || 'null');
+        let students = JSON.parse(localStorage.getItem('flask_students') || '[]');
+        let nextStudentId = parseInt(localStorage.getItem('flask_next_student_id') || '4');
+
+        // Initialize sample students if empty
+        if (students.length === 0) {
+            students = [
+                { id: 1, full_name: "Jesier Cresencio", email: "jesier.cresencio@tup.edu.ph" },
+                { id: 2, full_name: "Sean Kaylee Manzano", email: "seankaylee.manzano@tup.edu.ph" },
+            ];
+            saveData();
+        }
+
+        function saveData() {
+            localStorage.setItem('flask_users', JSON.stringify(users));
+            localStorage.setItem('flask_current_user', JSON.stringify(currentUser));
+            localStorage.setItem('flask_students', JSON.stringify(students));
+            localStorage.setItem('flask_next_student_id', nextStudentId.toString());
+        }
+
+        // FLASH MESSAGES (red color - Data & Obs #11)
+        function showFlash(message, isError = true) {
+            const container = document.getElementById('flash-container');
+            const flashDiv = document.createElement('div');
+            flashDiv.className = 'flash-message';
+            flashDiv.style.color = 'red';
+            flashDiv.innerHTML = message;
+            container.innerHTML = '';
+            container.appendChild(flashDiv);
+            setTimeout(() => {
+                if (flashDiv.parentNode) flashDiv.remove();
+            }, 3000);
+        }
+
+        function showWelcome(message) {
+            const container = document.getElementById('flash-container');
+            const flashDiv = document.createElement('div');
+            flashDiv.className = 'welcome-message';
+            flashDiv.style.color = '#44443B';
+            flashDiv.innerHTML = message;
+            container.innerHTML = '';
+            container.appendChild(flashDiv);
+            setTimeout(() => {
+                if (flashDiv.parentNode) flashDiv.remove();
+            }, 3000);
+        }
+
+        // PAGE NAVIGATION
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+
+            const target = document.getElementById(`page-${pageId}`);
+            if (target) {
+                target.classList.add('active');
+            } else {
+                // 404 Page (Data & Obs #9, #10)
+                let notFound = document.getElementById('page-404');
+                if (!notFound) {
+                    notFound = document.createElement('div');
+                    notFound.id = 'page-404';
+                    notFound.className = 'page';
+                    notFound.innerHTML = '<h2>404 - Page Not Found</h2><p>The page you\'re looking for doesn\'t exist.</p>';
+                    document.querySelector('main').appendChild(notFound);
+                }
+                notFound.classList.add('active');
+            }
+
+            updateNavAndUI();
+
+            if (pageId === 'students' && currentUser) {
+                renderStudentList();
+            }
+        }
+
+        function updateNavAndUI() {
+            const authLinks = document.getElementById('nav-auth-links');
+            const protectedLinks = document.getElementById('nav-protected-links');
+            const welcomeDiv = document.getElementById('welcome-user');
+
+            if (currentUser) {
+                authLinks.style.display = 'none';
+                protectedLinks.style.display = 'inline';
+                welcomeDiv.style.display = 'block';
+                welcomeDiv.innerHTML = `<div class="welcome-message">Welcome, ${escapeHtml(currentUser.email)}</div>`;
+            } else {
+                authLinks.style.display = 'inline';
+                protectedLinks.style.display = 'none';
+                welcomeDiv.style.display = 'none';
+            }
+        }
+
+        // STUDENT MANAGEMENT
+        function renderStudentList() {
+            // Data & Obs #6: Sort Students Alphabetically
+            const sorted = [...students].sort((a, b) => a.full_name.localeCompare(b.full_name));
+
+            const countEl = document.getElementById('student-count');
+            const listEl = document.getElementById('student-list');
+
+            // Data & Obs #4: Display Student Count
+            countEl.innerHTML = `Total Students: ${students.length}`;
+
+            if (sorted.length === 0) {
+                listEl.innerHTML = '<li style="text-align: center; color: #888;">No students added yet.</li>';
+                return;
+            }
+
+            listEl.innerHTML = '';
+            sorted.forEach(student => {
+                const li = document.createElement('li');
+                // Data & Obs #5: Bold the Student Names
+                li.innerHTML = `
+                    <span><strong class="student-name">${escapeHtml(student.full_name)}</strong> (${escapeHtml(student.email)})</span>
+                    <button class="delete-btn" onclick="deleteStudent(${student.id})">Delete</button>
+                `;
+                listEl.appendChild(li);
+            });
+        }
+
+        function addStudent(event) {
+            event.preventDefault();
+            const name = document.getElementById('student-name').value.trim();
+            const email = document.getElementById('student-email').value.trim();
+
+            if (!name || !email) {
+                showFlash("Please fill in both name and email");
+                return;
+            }
+
+            if (students.some(s => s.email === email)) {
+                showFlash("Student with this email already exists");
+                return;
+            }
+
+            students.push({
+                id: nextStudentId++,
+                full_name: name,
+                email: email
+            });
+
+            saveData();
+            renderStudentList();
+            document.getElementById('student-name').value = '';
+            document.getElementById('student-email').value = '';
+            showWelcome("Student added successfully!");
+        }
+
+        function deleteStudent(id) {
+            students = students.filter(s => s.id !== id);
+            saveData();
+            renderStudentList();
+            showWelcome("Student deleted successfully!");
+        }
+
+        // AUTHENTICATION
+        function handleLogin(event) {
+            event.preventDefault();
+            const email = document.getElementById('login-email').value.trim();
+            const password = document.getElementById('login-password').value;
+
+            // Data & Obs #18: console log validation
+            console.log("Form submitted!");
+
+            const user = users.find(u => u.email === email);
+
+            if (user && user.password === password) {
+                currentUser = user;
+                saveData();
+                showWelcome("Logged in successfully.");
+                showPage('students');
+                renderStudentList();
+                document.getElementById('login-form').reset();
+            } else {
+                console.log("Validation failed.");
+                showFlash("Invalid email or password.");
+            }
+        }
+
+        function handleRegister(event) {
+            event.preventDefault();
+            const email = document.getElementById('register-email').value.trim();
+            const password = document.getElementById('register-password').value;
+
+            // Data & Obs #13: Prevent Duplicate Email Registration
+            if (users.some(u => u.email === email)) {
+                showFlash("Email already registered.");
+                return;
+            }
+
+            if (password.length < 4) {
+                showFlash("Password must be at least 4 characters");
+                return;
+            }
+
+            users.push({ email: email, password: password });
+            saveData();
+            showWelcome("Registration successful!");
+            showPage('login');
+            document.getElementById('register-form').reset();
+        }
+
+        function logout() {
+            currentUser = null;
+            saveData();
+            showWelcome("You have been logged out.");
+            showPage('home');
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Initialize
+        updateNavAndUI();
+    </script>
+</body>
+
+</html>
