@@ -3,7 +3,6 @@
 <h2>Login</h2>
 <form method="POST">
     {{ form.hidden_tag() }}
-    {# Data & Obs #2: Add Placeholder Text in Login Forms #}
     <div>
         {{ form.email.label }}<br>
         {{ form.email(placeholder="Enter your email") }}
@@ -14,4 +13,7 @@
     </div>
     <div>{{ form.submit() }}</div>
 </form>
+
+<p style="margin-top: 20px;"><strong>Sample Account:</strong> rusellerae.laude@tup.edu.ph / sample123</p>
+<p><strong>Sample Account:</strong> admin@tup.edu.ph / admin123</p>
 {% endblock %}

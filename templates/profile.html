@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block title %}Edit Profile{% endblock %}
+{% block content %}
+<h2>Edit Profile</h2>
+
+<div style="display: flex; gap: 30px; flex-wrap: wrap;">
+    {# Current Profile Picture #}
+    <div style="flex: 1; min-width: 200px; text-align: center;">
+        {# EXERCISE 2: Display current profile picture #}
+        {% if user.profile_image %}
+            <img src="{{ url_for('static', filename='uploads/' + user.profile_image) }}" 
+                alt="Profile Picture" 
+                style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 3px solid #EC7A1C;">
+        {% else %}
+            <div style="width: 150px; height: 150px; border-radius: 50%; background: #9B806E; margin: 0 auto; display: flex; align-items: center; justify-content: center; color: white; font-size: 48px;">
+                {{ user.email[0].upper() }}
+            </div>
+        {% endif %}
+        <p style="margin-top: 10px;">Current Profile Picture</p>
+    </div>
+    
+    {# Edit Form - EXERCISE 2 #}
+    <div style="flex: 2; min-width: 300px;">
+        <form method="POST" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+            
+            <div>
+                {{ form.display_name.label }}<br>
+                {{ form.display_name(size=40, placeholder="Enter your display name", value=user.display_name or '') }}
+                <small>Leave blank to use your email as display name</small>
+            </div>
+            
+            <div>
+                {{ form.profile_image.label }}<br>
+                {{ form.profile_image() }}
+                <small>Allowed formats: JPG, PNG, JPEG. Max size: 16MB</small>
+            </div>
+            
+            <div>{{ form.submit(class_="btn btn-primary") }}</div>
+        </form>
+        
+        <div style="margin-top: 20px; padding: 15px; background: #F0E6D8; border-radius: 8px;">
+            <h4>Account Information</h4>
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            {# EXERCISE 1: Display role in profile #}
+            <p><strong>Role:</strong> {{ user.role|upper }}</p>
+            <p><strong>Access Level:</strong> {% if user.is_admin() %}Administrator{% else %}Viewer{% endif %}</p>
+        </div>
+    </div>
+</div>
+
+<br>
+<a href="{{ url_for('dashboard') }}">← Back to Dashboard</a>
+{% endblock %}

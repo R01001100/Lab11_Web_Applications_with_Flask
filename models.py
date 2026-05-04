@@ -10,8 +10,19 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(150), unique=True, nullable=False)
     password = db.Column(db.String(256), nullable=False)
 
+    # EXERCISE 1: Role-Based Student Management
+    role = db.Column(db.String(20), nullable=False, default="viewer")
+
+    # EXERCISE 2: Profile Management with Image Upload
+    display_name = db.Column(db.String(100), nullable=True)
+    profile_image = db.Column(db.String(200), nullable=True)
+
     def __repr__(self):
-        return f"<User {self.email}>"
+        return f"<User {self.email} ({self.role})>"
+
+    # EXERCISE 1: Helper method for role checking
+    def is_admin(self):
+        return self.role == "admin"
 
 
 class Student(db.Model):
@@ -22,13 +33,3 @@ class Student(db.Model):
 
     def __repr__(self):
         return f"<Student {self.full_name}>"
-
-
-# Try It: Add and Display a Sample Student (to run in notebook)
-# with app.app_context():
-#     sample_student = Student(full_name="Maria Santos", email="maria@example.com")
-#     db.session.add(sample_student)
-#     db.session.commit()
-#     all_students = Student.query.all()
-#     for s in all_students:
-#         print(f"{s.id}: {s.full_name} ({s.email})")

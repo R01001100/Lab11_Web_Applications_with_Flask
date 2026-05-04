@@ -3,12 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>Activity 11 Flask Web App</title>
-    {# Try It: Link style.css in Base.html #}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
     <header>
-        {# Try It: Add TUP Logo (Static Image) #}
         <img src="{{ url_for('static', filename='images/TUP.png') }}" alt="TUP Logo">
         <h1>Activity 11 Flask Web App</h1>
     </header>
@@ -17,6 +15,8 @@
         <a href="{{ url_for('about') }}">About</a>
         <a href="{{ url_for('contact') }}">Contact</a>
         {% if current_user.is_authenticated %}
+            {# EXERCISE 2: Dashboard link added #}
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
             <a href="{{ url_for('students') }}">Students</a>
             <a href="{{ url_for('logout') }}">Logout</a>
         {% else %}
@@ -25,7 +25,6 @@
         {% endif %}
     </nav>
     <main>
-        {# Data & Obs #11: Style Flash Messages in Red #}
         {% with messages = get_flashed_messages() %}
             {% if messages %}
                 {% for msg in messages %}
@@ -34,14 +33,13 @@
             {% endif %}
         {% endwith %}
 
-        {# Data & Obs #19: Show Current User Email #}
+        {# EXERCISE 2: Show display name or email when logged in #}
         {% if current_user.is_authenticated %}
-            <p>Welcome, {{ current_user.email }}</p>
+            <p>Welcome, {{ current_user.display_name or current_user.email }}</p>
         {% endif %}
 
         {% block content %}{% endblock %}
     </main>
-    {# Data & Obs #7: Add Footer to Base Template #}
     <footer style="text-align:center; padding: 10px;">
         &copy; 2026 Flask Activity
     </footer>

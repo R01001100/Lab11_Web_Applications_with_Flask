@@ -1,22 +1,22 @@
 {% extends 'base.html' %}
 {% block content %}
-{# Data & Obs #1: Modify the Register Template Layout #}
 <h2>Create a New Account</h2>
 <p>Please fill in the details below:</p>
 <form method="POST">
     {{ form.hidden_tag() }}
     <div>
         {{ form.email.label }}<br>
-        {# Data & Obs #15: Add Default Text to Email Field #}
-        {# Data & Obs #17: Add Class to Email Field #}
-        {{ form.email(size=30, placeholder="student@tup.edu.ph", class_="input-field", default="student@tup.edu.ph") }}
+        {{ form.email(size=30, placeholder="student@tup.edu.ph") }}
     </div>
     <div>
         {{ form.password.label }}<br>
-        {# Data & Obs #2: Add Placeholder Text in Login Form #}
         {{ form.password(size=30, placeholder="Enter your password") }}
     </div>
-    {# Data & Obs #8: Use Bootstrap Button Class #}
+    {# EXERCISE 1: Role selection on registration form #}
+    <div>
+        {{ form.role.label }}<br>
+        {{ form.role() }}
+    </div>
     <div>{{ form.submit(class_="btn btn-primary") }}</div>
 </form>
 {% endblock %}

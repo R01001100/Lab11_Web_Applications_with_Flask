@@ -1,6 +1,7 @@
 # 🌐 Lab 11 — Flask Web Applications
 
 > **Activity 11 · Building Web Applications with Flask**  
+> *Additional Exercises: Role-Based Access Control & Profile Management*
 
 > Technological University of the Philippines – Manila | Electronics Engineering Department
 
@@ -8,9 +9,12 @@
 
 ## 📋 Overview
 
-This project is the web implementation of the **Lab 11 – Building Web Applications with Flask** laboratory activity. It demonstrates the fundamentals of full-stack web development using Flask, including routing, template rendering, form validation, database integration, and user authentication.
+This project is the web implementation of the **Lab 11 – Building Web Applications with Flask** laboratory activity, including the **two additional exercises**. It demonstrates full-stack web development using Flask, featuring:
 
-The application was developed using Python, Flask, Flask-WTF, Flask-SQLAlchemy, and Flask-Login. It follows a structured Flask project setup with reusable templates, static assets, and SQLite database support.
+- **Exercise 1:** Role-Based Student Management System (Admin vs Viewer access control)
+- **Exercise 2:** Profile Management with Image Upload functionality
+
+The application was developed using Python, Flask, Flask-WTF, Flask-SQLAlchemy, Flask-Login, and follows a structured Flask project setup with reusable templates, static assets, and SQLite database support.
 
 ---
 
@@ -22,34 +26,42 @@ The application was developed using Python, Flask, Flask-WTF, Flask-SQLAlchemy, 
 
 ---
 
-## 🌐 Features
+## ✨ Features
 
-### 1. 🔐 User Authentication System
+### 🔐 User Authentication System
 - User registration with email and password
 - Secure password hashing using Werkzeug
 - Login and logout functionality
 - Session handling with Flask-Login
 - Protected routes using `@login_required`
 
-### 2. 👨‍🎓 Student Management System
-- Add student records through a web form
-- Display all students stored in the database
-- Delete existing student records
-- Dynamic rendering using Jinja2 templates
-- Database persistence using SQLite
+### 👨‍🎓 Exercise 1: Role-Based Student Management
+- **Admin Role** – Full CRUD operations (add, view, delete students)
+- **Viewer Role** – Read-only access to student list
+- Role selection during registration
+- Role-based conditional rendering in templates
+- Permission checks on all student management routes
 
-### 3. 🎨 Frontend and Template System
+### 🖼️ Exercise 2: Profile Management with Image Upload
+- Update display name (separate from email)
+- Upload profile pictures (JPG, PNG, JPEG only)
+- File validation (extension, size limit: 16MB)
+- Secure filename generation with timestamps
+- Automatic deletion of old profile images
+- Dashboard displays uploaded profile picture and display name
+
+### 🎨 Frontend and Template System
 - Reusable layouts using template inheritance
-- Navigation bar with conditional rendering
-- Flash messages for login and registration status
+- Navigation bar with conditional rendering based on login status
+- Flash messages for user feedback
 - External CSS styling with static assets
-- Image support using Flask static folders
+- Responsive design for mobile devices
 
-### 4. 🗄️ Database Integration
+### 🗄️ Database Integration
 - SQLite database with SQLAlchemy ORM
-- Separate models for Users and Students
+- **User Model:** id, email, password, role, display_name, profile_image
+- **Student Model:** id, full_name, email
 - Automatic table creation with Flask application context
-- Querying, inserting, and deleting records dynamically
 
 ---
 
@@ -82,5 +94,4 @@ The application was developed using Python, Flask, Flask-WTF, Flask-SQLAlchemy, 
 ## 👤 Author
 
 **R01001100**  
-
 TUP – Manila | BS Electronics Engineering

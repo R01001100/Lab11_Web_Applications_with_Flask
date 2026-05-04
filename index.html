@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-<!-- this version is only a frontend demo/mimic of the original Flask application -->
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Activity 11 Flask Web App</title>
+    <title>Activity 11 - Student Management System</title>
     <style>
-        /* copy of style.css */
+        /* ===== EXACT CSS FROM style.css ===== */
         * {
             margin: 0;
             padding: 0;
@@ -22,12 +21,6 @@
             line-height: 1.6;
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
         nav {
             background-color: #44443B;
             color: #EC7A1C;
@@ -40,7 +33,7 @@
             text-decoration: none;
             margin-right: 20px;
             font-weight: 500;
-            transition: color 0.3s ease, border-bottom 0.3s ease;
+            transition: color 0.3s ease;
             cursor: pointer;
         }
 
@@ -86,23 +79,9 @@
             padding-left: 15px;
         }
 
-        /* Flash messages - red text as in base.html */
-        .flash-message {
-            background-color: #F0E6D8;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            color: red;
-            border-left: 4px solid #EC7A1C;
-        }
-
-        .welcome-message {
-            background-color: #F0E6D8;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 20px;
+        h3 {
             color: #44443B;
-            border-left: 4px solid #EC7A1C;
+            margin: 15px 0 10px 0;
         }
 
         form {
@@ -124,7 +103,9 @@
 
         form input[type="text"],
         form input[type="email"],
-        form input[type="password"] {
+        form input[type="password"],
+        form select,
+        form input[type="file"] {
             width: 100%;
             padding: 10px;
             margin-bottom: 10px;
@@ -142,7 +123,8 @@
         }
 
         form button,
-        form input[type="submit"] {
+        form input[type="submit"],
+        .btn-primary {
             background-color: #90462C;
             color: #E6E4E0;
             border: none;
@@ -157,114 +139,26 @@
         }
 
         form button:hover,
-        form input[type="submit"]:hover {
+        form input[type="submit"]:hover,
+        .btn-primary:hover {
             background-color: #EC7A1C;
         }
 
-        .student-list {
+        ul {
             list-style: none;
-            margin-top: 20px;
+            padding: 0;
         }
 
-        .student-list li {
-            padding: 12px;
+        ul li {
+            padding: 10px;
             border-bottom: 1px solid #E0D6C8;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .student-list li:hover {
-            background-color: #FEFCF8;
-        }
-
-        .student-name {
-            font-weight: bold;
-        }
-
-        .delete-btn {
-            background-color: #90462C;
-            color: #E6E4E0;
-            padding: 5px 12px;
-            border-radius: 20px;
-            text-decoration: none;
-            font-size: 0.85rem;
-            transition: background-color 0.3s ease;
-            cursor: pointer;
-            border: none;
-        }
-
-        .delete-btn:hover {
-            background-color: #EC7A1C;
-        }
-
-        .add-student-form {
-            background-color: #FEFCF8;
-            padding: 20px;
-            border-radius: 12px;
-            border: 1px solid #E0D6C8;
-            margin-bottom: 30px;
-        }
-
-        .add-student-form input {
-            width: 100%;
-            margin-bottom: 10px;
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid #CCC5B8;
-        }
-
-        .add-student-form button {
-            background-color: #90462C;
-            color: #E6E4E0;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            width: 100%;
-        }
-
-        .add-student-form button:hover {
-            background-color: #EC7A1C;
-        }
-
-        .total-count {
-            margin-bottom: 20px;
-            font-weight: bold;
-            padding: 10px;
-            background-color: #F0E6D8;
-            border-radius: 8px;
         }
 
         footer {
             text-align: center;
             padding: 10px;
-            margin-top: 25px;
-        }
-
-        .input-field {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #CCC5B8;
-            border-radius: 8px;
-        }
-
-        .btn-primary {
-            background-color: #90462C;
-            color: #E6E4E0;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            width: 100%;
-            transition: background-color 0.3s ease;
-        }
-
-        .btn-primary:hover {
-            background-color: #EC7A1C;
+            margin-top: 20px;
+            color: #44443B;
         }
 
         @media (max-width: 768px) {
@@ -276,22 +170,134 @@
 
             main {
                 padding: 15px;
-                margin: 15px;
-            }
-
-            .student-list li {
-                flex-direction: column;
-                gap: 10px;
-                text-align: center;
             }
         }
 
-        .page {
+        /* Additional custom styles for this frontend */
+        .dashboard-container {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .profile-card {
+            flex: 1;
+            min-width: 250px;
+            background: #FEFCF8;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #E0D6C8;
+            text-align: center;
+        }
+
+        .stats-card {
+            flex: 2;
+            min-width: 300px;
+        }
+
+        .info-card {
+            background: #FEFCF8;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #E0D6C8;
+            margin-bottom: 20px;
+        }
+
+        .avatar-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: #9B806E;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 48px;
+        }
+
+        .avatar-img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 15px;
+            border: 3px solid #EC7A1C;
+        }
+
+        .add-student-form {
+            background: #FEFCF8;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #E0D6C8;
+            margin-bottom: 20px;
+        }
+
+        .add-student-form input {
+            width: calc(50% - 10px);
+            margin-right: 10px;
+            padding: 10px;
+            border: 1px solid #CCC5B8;
+            border-radius: 8px;
+        }
+
+        .add-student-form button {
+            width: auto;
+            padding: 10px 20px;
+            margin-top: 0;
+        }
+
+        .delete-link {
+            color: #90462C;
+            text-decoration: none;
+            margin-left: 15px;
+        }
+
+        .delete-link:hover {
+            color: #EC7A1C;
+        }
+
+        .viewer-note {
+            font-style: italic;
+            color: #9B806E;
+            margin-bottom: 20px;
+        }
+
+        .role-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .role-admin {
+            background-color: #90462C;
+            color: white;
+        }
+
+        .role-viewer {
+            background-color: #9B806E;
+            color: white;
+        }
+
+        .flash-message {
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            background-color: #FEFCF8;
+            border-left: 4px solid #EC7A1C;
+            color: #44443B;
+        }
+
+        .hidden {
             display: none;
         }
 
-        .page.active {
-            display: block;
+        .inline-btn {
+            display: inline-block;
+            text-decoration: none;
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -301,326 +307,434 @@
         <img src="static/images/TUP.png" alt="TUP Logo">
         <h1>Activity 11 Flask Web App</h1>
     </header>
-
     <nav>
         <a onclick="showPage('home')">Home</a>
         <a onclick="showPage('about')">About</a>
         <a onclick="showPage('contact')">Contact</a>
-        <span id="nav-auth-links">
+        <span id="auth-nav-links">
             <a onclick="showPage('login')">Login</a>
             <a onclick="showPage('register')">Register</a>
         </span>
-        <span id="nav-protected-links" style="display: none;">
+        <span id="authenticated-nav-links" style="display: none;">
+            <a onclick="showPage('dashboard')">Dashboard</a>
             <a onclick="showPage('students')">Students</a>
             <a onclick="logout()">Logout</a>
         </span>
     </nav>
-
-    <main>
-        <!-- Flash Messages Container (Data & Obs #11 - red color) -->
-        <div id="flash-container"></div>
-
-        <!-- Welcome User Message (Data & Obs #19) -->
-        <div id="welcome-user" style="display: none;"></div>
-
-        <!-- HOME PAGE -->
-        <div id="page-home" class="page active">
-            <h2>Hello, I am Ruselle Laude!</h2>
-            <p>Section: BSECE 1C</p>
-            <h2>Welcome, student!</h2>
-            <p>This app was built using Flask and Jinja2 templates.</p>
-        </div>
-
-        <!-- ABOUT PAGE -->
-        <div id="page-about" class="page">
-            <h2>About This App</h2>
-            <p>This Flask app demonstrates user login, database integration, and template rendering.</p>
-        </div>
-
-        <!-- CONTACT PAGE -->
-        <div id="page-contact" class="page">
-            <h2>Contact Us</h2>
-            <p>Email: rusellerae.laude@tup.edu.ph</p>
-        </div>
-
-        <!-- LOGIN PAGE (Data & Obs #2 - placeholders) -->
-        <div id="page-login" class="page">
-            <h2>Login</h2>
-            <form id="login-form" onsubmit="handleLogin(event)">
-                <div>
-                    <label>Email</label>
-                    <input type="email" id="login-email" placeholder="Enter your email" required>
-                </div>
-                <div>
-                    <label>Password</label>
-                    <input type="password" id="login-password" placeholder="Enter your password" required>
-                </div>
-                <button type="submit">Login</button>
-            </form>
-        </div>
-
-        <!-- REGISTER PAGE (Data & Obs #1, #8, #12, #14, #15, #17) -->
-        <div id="page-register" class="page">
-            <h2>Create a New Account</h2>
-            <p>Please fill in the details below:</p>
-            <form id="register-form" onsubmit="handleRegister(event)">
-                <div>
-                    <label>Email</label>
-                    <input type="email" id="register-email" class="input-field" placeholder="student@tup.edu.ph"
-                        maxlength="50" value="student@tup.edu.ph" required>
-                    <small>Your school email address</small>
-                </div>
-                <div>
-                    <label>Password</label>
-                    <input type="password" id="register-password" placeholder="Enter your password" minlength="4"
-                        required>
-                </div>
-                <button type="submit" class="btn-primary">Register</button>
-            </form>
-        </div>
-
-        <!-- STUDENTS PAGE (Data & Obs #4, #5, #6) -->
-        <div id="page-students" class="page">
-            <h2>Student List</h2>
-            <div id="student-count" class="total-count">Total Students: 0</div>
-
-            <div class="add-student-form">
-                <form id="add-student-form" onsubmit="addStudent(event)">
-                    <input type="text" name="name" placeholder="Full Name" id="student-name" required>
-                    <input type="email" name="email" placeholder="Email" id="student-email" required>
-                    <button type="submit">Add Student</button>
-                </form>
-            </div>
-
-            <ul id="student-list" class="student-list"></ul>
-        </div>
+    <main id="main-content">
+        <!-- Dynamic content will be loaded here -->
     </main>
-
     <footer>
         &copy; 2026 Flask Activity
     </footer>
 
     <script>
-        // DATA STORAGE (localStorage for persistence)
-        let users = JSON.parse(localStorage.getItem('flask_users') || '[]');
-        let currentUser = JSON.parse(localStorage.getItem('flask_current_user') || 'null');
-        let students = JSON.parse(localStorage.getItem('flask_students') || '[]');
-        let nextStudentId = parseInt(localStorage.getItem('flask_next_student_id') || '4');
+        // ===== FRONTEND STATE MANAGEMENT =====
+        // Simulating backend database with localStorage
+        let currentUser = null;
 
-        // Initialize sample students if empty
-        if (students.length === 0) {
-            students = [
-                { id: 1, full_name: "Jesier Cresencio", email: "jesier.cresencio@tup.edu.ph" },
-                { id: 2, full_name: "Sean Kaylee Manzano", email: "seankaylee.manzano@tup.edu.ph" },
-            ];
-            saveData();
+        // Initialize default data
+        function initData() {
+            // Default users
+            let users = localStorage.getItem('users');
+            if (!users) {
+                const defaultUsers = [
+                    { id: 1, email: "admin@tup.edu.ph", password: "admin123", role: "admin", display_name: "Administrator", profile_image: null },
+                    { id: 2, email: "rusellerae.laude@tup.edu.ph", password: "sample123", role: "viewer", display_name: null, profile_image: null }
+                ];
+                localStorage.setItem('users', JSON.stringify(defaultUsers));
+            }
+
+            // Default students
+            let students = localStorage.getItem('students');
+            if (!students) {
+                const defaultStudents = [
+                    { id: 1, full_name: "Juan Dela Cruz", email: "juan.delacruz@tup.edu.ph" },
+                    { id: 2, full_name: "Maria Santos", email: "maria.santos@tup.edu.ph" },
+                    { id: 3, full_name: "Jose Rizal", email: "jose.rizal@tup.edu.ph" }
+                ];
+                localStorage.setItem('students', JSON.stringify(defaultStudents));
+            }
         }
 
-        function saveData() {
-            localStorage.setItem('flask_users', JSON.stringify(users));
-            localStorage.setItem('flask_current_user', JSON.stringify(currentUser));
-            localStorage.setItem('flask_students', JSON.stringify(students));
-            localStorage.setItem('flask_next_student_id', nextStudentId.toString());
+        // Helper functions
+        function getUsers() {
+            return JSON.parse(localStorage.getItem('users')) || [];
         }
 
-        // FLASH MESSAGES (red color - Data & Obs #11)
-        function showFlash(message, isError = true) {
-            const container = document.getElementById('flash-container');
+        function saveUsers(users) {
+            localStorage.setItem('users', JSON.stringify(users));
+        }
+
+        function getStudents() {
+            return JSON.parse(localStorage.getItem('students')) || [];
+        }
+
+        function saveStudents(students) {
+            localStorage.setItem('students', JSON.stringify(students));
+        }
+
+        function showFlash(message, isError = false) {
             const flashDiv = document.createElement('div');
             flashDiv.className = 'flash-message';
-            flashDiv.style.color = 'red';
+            flashDiv.style.backgroundColor = isError ? '#FFE4E1' : '#E0F7E8';
+            flashDiv.style.borderLeftColor = isError ? '#90462C' : '#EC7A1C';
             flashDiv.innerHTML = message;
-            container.innerHTML = '';
-            container.appendChild(flashDiv);
-            setTimeout(() => {
-                if (flashDiv.parentNode) flashDiv.remove();
-            }, 3000);
+            const main = document.getElementById('main-content');
+            const existingFlash = main.querySelector('.flash-message');
+            if (existingFlash) existingFlash.remove();
+            main.insertBefore(flashDiv, main.firstChild);
+            setTimeout(() => flashDiv.remove(), 3000);
         }
 
-        function showWelcome(message) {
-            const container = document.getElementById('flash-container');
-            const flashDiv = document.createElement('div');
-            flashDiv.className = 'welcome-message';
-            flashDiv.style.color = '#44443B';
-            flashDiv.innerHTML = message;
-            container.innerHTML = '';
-            container.appendChild(flashDiv);
-            setTimeout(() => {
-                if (flashDiv.parentNode) flashDiv.remove();
-            }, 3000);
-        }
-
-        // PAGE NAVIGATION
-        function showPage(pageId) {
-            document.querySelectorAll('.page').forEach(page => {
-                page.classList.remove('active');
-            });
-
-            const target = document.getElementById(`page-${pageId}`);
-            if (target) {
-                target.classList.add('active');
-            } else {
-                // 404 Page (Data & Obs #9, #10)
-                let notFound = document.getElementById('page-404');
-                if (!notFound) {
-                    notFound = document.createElement('div');
-                    notFound.id = 'page-404';
-                    notFound.className = 'page';
-                    notFound.innerHTML = '<h2>404 - Page Not Found</h2><p>The page you\'re looking for doesn\'t exist.</p>';
-                    document.querySelector('main').appendChild(notFound);
-                }
-                notFound.classList.add('active');
-            }
-
-            updateNavAndUI();
-
-            if (pageId === 'students' && currentUser) {
-                renderStudentList();
-            }
-        }
-
-        function updateNavAndUI() {
-            const authLinks = document.getElementById('nav-auth-links');
-            const protectedLinks = document.getElementById('nav-protected-links');
-            const welcomeDiv = document.getElementById('welcome-user');
-
+        function updateNavBar() {
+            const authLinks = document.getElementById('auth-nav-links');
+            const authenticatedLinks = document.getElementById('authenticated-nav-links');
             if (currentUser) {
                 authLinks.style.display = 'none';
-                protectedLinks.style.display = 'inline';
-                welcomeDiv.style.display = 'block';
-                welcomeDiv.innerHTML = `<div class="welcome-message">Welcome, ${escapeHtml(currentUser.email)}</div>`;
+                authenticatedLinks.style.display = 'inline';
             } else {
                 authLinks.style.display = 'inline';
-                protectedLinks.style.display = 'none';
-                welcomeDiv.style.display = 'none';
+                authenticatedLinks.style.display = 'none';
             }
         }
 
-        // STUDENT MANAGEMENT
-        function renderStudentList() {
-            // Data & Obs #6: Sort Students Alphabetically
-            const sorted = [...students].sort((a, b) => a.full_name.localeCompare(b.full_name));
-
-            const countEl = document.getElementById('student-count');
-            const listEl = document.getElementById('student-list');
-
-            // Data & Obs #4: Display Student Count
-            countEl.innerHTML = `Total Students: ${students.length}`;
-
-            if (sorted.length === 0) {
-                listEl.innerHTML = '<li style="text-align: center; color: #888;">No students added yet.</li>';
-                return;
-            }
-
-            listEl.innerHTML = '';
-            sorted.forEach(student => {
-                const li = document.createElement('li');
-                // Data & Obs #5: Bold the Student Names
-                li.innerHTML = `
-                    <span><strong class="student-name">${escapeHtml(student.full_name)}</strong> (${escapeHtml(student.email)})</span>
-                    <button class="delete-btn" onclick="deleteStudent(${student.id})">Delete</button>
-                `;
-                listEl.appendChild(li);
-            });
-        }
-
-        function addStudent(event) {
-            event.preventDefault();
-            const name = document.getElementById('student-name').value.trim();
-            const email = document.getElementById('student-email').value.trim();
-
-            if (!name || !email) {
-                showFlash("Please fill in both name and email");
-                return;
-            }
-
-            if (students.some(s => s.email === email)) {
-                showFlash("Student with this email already exists");
-                return;
-            }
-
-            students.push({
-                id: nextStudentId++,
-                full_name: name,
-                email: email
-            });
-
-            saveData();
-            renderStudentList();
-            document.getElementById('student-name').value = '';
-            document.getElementById('student-email').value = '';
-            showWelcome("Student added successfully!");
-        }
-
-        function deleteStudent(id) {
-            students = students.filter(s => s.id !== id);
-            saveData();
-            renderStudentList();
-            showWelcome("Student deleted successfully!");
-        }
-
-        // AUTHENTICATION
-        function handleLogin(event) {
-            event.preventDefault();
-            const email = document.getElementById('login-email').value.trim();
-            const password = document.getElementById('login-password').value;
-
-            // Data & Obs #18: console log validation
-            console.log("Form submitted!");
-
-            const user = users.find(u => u.email === email);
-
-            if (user && user.password === password) {
-                currentUser = user;
-                saveData();
-                showWelcome("Logged in successfully.");
-                showPage('students');
-                renderStudentList();
-                document.getElementById('login-form').reset();
-            } else {
-                console.log("Validation failed.");
-                showFlash("Invalid email or password.");
-            }
-        }
-
-        function handleRegister(event) {
-            event.preventDefault();
-            const email = document.getElementById('register-email').value.trim();
-            const password = document.getElementById('register-password').value;
-
-            // Data & Obs #13: Prevent Duplicate Email Registration
-            if (users.some(u => u.email === email)) {
-                showFlash("Email already registered.");
-                return;
-            }
-
-            if (password.length < 4) {
-                showFlash("Password must be at least 4 characters");
-                return;
-            }
-
-            users.push({ email: email, password: password });
-            saveData();
-            showWelcome("Registration successful!");
-            showPage('login');
-            document.getElementById('register-form').reset();
+        function isAdmin() {
+            return currentUser && currentUser.role === 'admin';
         }
 
         function logout() {
             currentUser = null;
-            saveData();
-            showWelcome("You have been logged out.");
+            updateNavBar();
+            showFlash("You have been logged out.");
             showPage('home');
         }
 
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
+        // ===== PAGE RENDERERS =====
+        function showPage(page) {
+            const main = document.getElementById('main-content');
+            if (page === 'home') renderHome(main);
+            else if (page === 'about') renderAbout(main);
+            else if (page === 'contact') renderContact(main);
+            else if (page === 'login') renderLogin(main);
+            else if (page === 'register') renderRegister(main);
+            else if (page === 'dashboard') {
+                if (!currentUser) { showFlash("Please login first.", true); renderLogin(main); return; }
+                renderDashboard(main);
+            }
+            else if (page === 'students') {
+                if (!currentUser) { showFlash("Please login first.", true); renderLogin(main); return; }
+                renderStudents(main);
+            }
+            else if (page === 'profile') {
+                if (!currentUser) { showFlash("Please login first.", true); renderLogin(main); return; }
+                renderProfile(main);
+            }
         }
 
-        // Initialize
-        updateNavAndUI();
+        function renderHome(container) {
+            container.innerHTML = `
+                <h2>Hello, I am Ruselle Laude!</h2>
+                <p>Section: BSECE 1C</p>
+                <h2>Welcome, student!</h2>
+                <p>This application includes:</p>
+                <ul>
+                    <li><strong>Exercise 1:</strong> Role-Based Student Management (Admin/Viewer)</li>
+                    <li><strong>Exercise 2:</strong> Profile Management with Image Upload</li>
+                </ul>
+            `;
+        }
+
+        function renderAbout(container) {
+            container.innerHTML = `
+                <h2>About This App</h2>
+                <p>This Flask app demonstrates:</p>
+                <ul>
+                    <li><strong>Exercise 1:</strong> Role-based access control (Admin vs Viewer)</li>
+                    <li><strong>Exercise 1:</strong> Student management with add/delete permissions</li>
+                    <li><strong>Exercise 2:</strong> Profile management with image upload</li>
+                    <li><strong>Exercise 2:</strong> User dashboard with display name</li>
+                </ul>
+            `;
+        }
+
+        function renderContact(container) {
+            container.innerHTML = `
+                <h2>Contact Us</h2>
+                <p>Email: rusellerae.laude@tup.edu.ph</p>
+            `;
+        }
+
+        function renderLogin(container) {
+            container.innerHTML = `
+                <h2>Login</h2>
+                <form id="loginForm">
+                    <div>
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                    </div>
+                    <div>
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                    </div>
+                    <button type="submit">Login</button>
+                </form>
+                <p style="margin-top: 20px;"><strong>Sample Account:</strong> rusellerae.laude@tup.edu.ph / sample123</p>
+                <p><strong>Sample Admin:</strong> admin@tup.edu.ph / admin123</p>
+            `;
+            document.getElementById('loginForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                const users = getUsers();
+                const user = users.find(u => u.email === email && u.password === password);
+                if (user) {
+                    currentUser = { ...user };
+                    updateNavBar();
+                    showFlash(`Logged in successfully as ${user.role}.`);
+                    showPage('dashboard');
+                } else {
+                    showFlash("Invalid email or password.", true);
+                }
+            });
+        }
+
+        function renderRegister(container) {
+            container.innerHTML = `
+                <h2>Create a New Account</h2>
+                <p>Please fill in the details below:</p>
+                <form id="registerForm">
+                    <div>
+                        <label for="regEmail">Email</label>
+                        <input type="email" id="regEmail" placeholder="student@tup.edu.ph" required>
+                    </div>
+                    <div>
+                        <label for="regPassword">Password</label>
+                        <input type="password" id="regPassword" placeholder="Enter your password" required>
+                    </div>
+                    <div>
+                        <label for="regRole">Role</label>
+                        <select id="regRole">
+                            <option value="viewer">Viewer - Can only view students</option>
+                            <option value="admin">Admin - Can add, edit, and delete students</option>
+                        </select>
+                    </div>
+                    <button type="submit">Register</button>
+                </form>
+            `;
+            document.getElementById('registerForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const email = document.getElementById('regEmail').value;
+                const password = document.getElementById('regPassword').value;
+                const role = document.getElementById('regRole').value;
+                const users = getUsers();
+                if (users.find(u => u.email === email)) {
+                    showFlash("Email already registered.", true);
+                    return;
+                }
+                const newId = users.length > 0 ? Math.max(...users.map(u => u.id)) + 1 : 3;
+                const newUser = { id: newId, email, password, role, display_name: null, profile_image: null };
+                users.push(newUser);
+                saveUsers(users);
+                showFlash(`Registration successful! Your role is: ${role}`);
+                showPage('login');
+            });
+        }
+
+        function renderDashboard(container) {
+            const students = getStudents();
+            const displayName = currentUser.display_name || currentUser.email;
+            container.innerHTML = `
+                <h2>My Dashboard</h2>
+                <div class="dashboard-container">
+                    <div class="profile-card">
+                        ${currentUser.profile_image ?
+                    `<img src="${currentUser.profile_image}" class="avatar-img" alt="Profile Picture">` :
+                    `<div class="avatar-circle">${currentUser.email[0].toUpperCase()}</div>`
+                }
+                        <h3>${displayName}</h3>
+                        <p>Email: ${currentUser.email}</p>
+                        <p>Role: <strong>${currentUser.role.toUpperCase()}</strong></p>
+                        <a onclick="showPage('profile')" class="btn-primary inline-btn" style="display: inline-block; text-decoration: none;">Edit Profile</a>
+                    </div>
+                    <div class="stats-card">
+                        <div class="info-card">
+                            <h3>Statistics</h3>
+                            <p>Total Students: ${students.length}</p>
+                            <p>Your Access Level: ${isAdmin() ? '<strong style="color: green;">Administrator (Full Access)</strong>' : '<strong style="color: blue;">Viewer (Read Only)</strong>'}</p>
+                        </div>
+                        <div class="info-card">
+                            <h3>Quick Actions</h3>
+                            <ul>
+                                <li><a onclick="showPage('students')" style="cursor: pointer;">View Students</a></li>
+                                ${isAdmin() ? '<li><a onclick="showPage(\'students\')" style="cursor: pointer;">Manage Students (Add/Delete)</a></li>' : ''}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderStudents(container) {
+            let students = getStudents();
+            const admin = isAdmin();
+            container.innerHTML = `
+                <h2>Student List</h2>
+                <p>Total Students: ${students.length}</p>
+                ${admin ? `
+                    <div class="add-student-form">
+                        <h3>Add New Student (Admin Only)</h3>
+                        <form id="addStudentForm">
+                            <input type="text" id="studentName" placeholder="Full Name" required>
+                            <input type="email" id="studentEmail" placeholder="Email" required>
+                            <button type="submit">Add Student</button>
+                        </form>
+                    </div>
+                ` : '<p class="viewer-note"><em>You are in viewer mode. Only administrators can add or delete students.</em></p>'}
+                <ul id="studentsList">
+                    ${students.map(s => `
+                        <li>
+                            <strong>${escapeHtml(s.full_name)}</strong> (${escapeHtml(s.email)})
+                            ${admin ? `- <a onclick="deleteStudent(${s.id})" class="delete-link" style="cursor: pointer;">Delete</a>` : ''}
+                        </li>
+                    `).join('')}
+                </ul>
+            `;
+            if (admin) {
+                document.getElementById('addStudentForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const name = document.getElementById('studentName').value.trim();
+                    const email = document.getElementById('studentEmail').value.trim();
+                    if (!name || !email) {
+                        showFlash("Name and email are required.", true);
+                        return;
+                    }
+                    let studentsList = getStudents();
+                    if (studentsList.find(s => s.email === email)) {
+                        showFlash("A student with this email already exists.", true);
+                        return;
+                    }
+                    const newId = studentsList.length > 0 ? Math.max(...studentsList.map(s => s.id)) + 1 : 4;
+                    studentsList.push({ id: newId, full_name: name, email });
+                    saveStudents(studentsList);
+                    showFlash("Student added successfully!");
+                    renderStudents(document.getElementById('main-content'));
+                });
+            }
+        }
+
+        function deleteStudent(id) {
+            if (!isAdmin()) {
+                showFlash("Permission denied. Only administrators can delete students.", true);
+                return;
+            }
+            if (confirm("Are you sure you want to delete this student?")) {
+                let studentsList = getStudents();
+                studentsList = studentsList.filter(s => s.id !== id);
+                saveStudents(studentsList);
+                showFlash("Student deleted successfully!");
+                renderStudents(document.getElementById('main-content'));
+            }
+        }
+
+        function renderProfile(container) {
+            container.innerHTML = `
+                <h2>Edit Profile</h2>
+                <div style="display: flex; gap: 30px; flex-wrap: wrap;">
+                    <div style="flex: 1; min-width: 200px; text-align: center;">
+                        ${currentUser.profile_image ?
+                    `<img src="${currentUser.profile_image}" class="avatar-img" style="width:150px;height:150px;" alt="Profile Picture">` :
+                    `<div class="avatar-circle" style="width:150px;height:150px;font-size:48px;">${currentUser.email[0].toUpperCase()}</div>`
+                }
+                        <p style="margin-top: 10px;">Current Profile Picture</p>
+                    </div>
+                    <div style="flex: 2; min-width: 300px;">
+                        <form id="profileForm" enctype="multipart/form-data">
+                            <div>
+                                <label for="displayName">Display Name</label>
+                                <input type="text" id="displayName" placeholder="Enter your display name" value="${currentUser.display_name || ''}">
+                                <small>Leave blank to use your email as display name</small>
+                            </div>
+                            <div>
+                                <label for="profileImage">Profile Picture</label>
+                                <input type="file" id="profileImage" accept="image/png, image/jpg, image/jpeg">
+                                <small>Allowed formats: JPG, PNG, JPEG. Max size: 16MB</small>
+                            </div>
+                            <button type="submit">Update Profile</button>
+                        </form>
+                        <div style="margin-top: 20px; padding: 15px; background: #F0E6D8; border-radius: 8px;">
+                            <h4>Account Information</h4>
+                            <p><strong>Email:</strong> ${currentUser.email}</p>
+                            <p><strong>Role:</strong> ${currentUser.role.toUpperCase()}</p>
+                            <p><strong>Access Level:</strong> ${isAdmin() ? 'Administrator' : 'Viewer'}</p>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <a onclick="showPage('dashboard')" style="cursor: pointer; color: #90462C;">← Back to Dashboard</a>
+            `;
+            document.getElementById('profileForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const newDisplayName = document.getElementById('displayName').value;
+                const fileInput = document.getElementById('profileImage');
+
+                // Update display name
+                currentUser.display_name = newDisplayName || null;
+
+                // Handle image upload (convert to data URL for demo)
+                if (fileInput.files && fileInput.files[0]) {
+                    const file = fileInput.files[0];
+                    const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+                    if (!allowedTypes.includes(file.type)) {
+                        showFlash("Only JPG, PNG, and JPEG images are allowed!", true);
+                        return;
+                    }
+                    if (file.size > 16 * 1024 * 1024) {
+                        showFlash("File too large! Max 16MB.", true);
+                        return;
+                    }
+                    const reader = new FileReader();
+                    reader.onload = function (evt) {
+                        currentUser.profile_image = evt.target.result;
+                        // Update in users array
+                        const users = getUsers();
+                        const userIndex = users.findIndex(u => u.id === currentUser.id);
+                        if (userIndex !== -1) {
+                            users[userIndex] = { ...currentUser };
+                            saveUsers(users);
+                        }
+                        showFlash("Profile updated successfully!");
+                        showPage('dashboard');
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    // Update without image
+                    const users = getUsers();
+                    const userIndex = users.findIndex(u => u.id === currentUser.id);
+                    if (userIndex !== -1) {
+                        users[userIndex] = { ...currentUser };
+                        saveUsers(users);
+                    }
+                    showFlash("Profile updated successfully!");
+                    showPage('dashboard');
+                }
+            });
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function (m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+
+        // Initialize and start app
+        initData();
+        updateNavBar();
+        showPage('home');
     </script>
 </body>
 

@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<h2>My Dashboard</h2>
+
+<div style="display: flex; gap: 30px; flex-wrap: wrap;">
+    {# Profile Card - EXERCISE 2 #}
+    <div style="flex: 1; min-width: 250px; background: #FEFCF8; padding: 20px; border-radius: 12px; border: 1px solid #E0D6C8; text-align: center;">
+        {# EXERCISE 2: Display uploaded profile picture #}
+        {% if user.profile_image %}
+            <img src="{{ url_for('static', filename='uploads/' + user.profile_image) }}" 
+                alt="Profile Picture" 
+                style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; margin-bottom: 15px; border: 3px solid #EC7A1C;">
+        {% else %}
+            <div style="width: 150px; height: 150px; border-radius: 50%; background: #9B806E; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; color: white; font-size: 48px;">
+                {{ user.email[0].upper() }}
+            </div>
+        {% endif %}
+        
+        {# EXERCISE 2: Display display name or email #}
+        <h3>{{ user.display_name or user.email }}</h3>
+        <p>Email: {{ user.email }}</p>
+        
+        {# EXERCISE 1: Display user role #}
+        <p>Role: <strong>{{ user.role|upper }}</strong></p>
+        
+        <a href="{{ url_for('profile') }}" class="btn-primary" style="display: inline-block; text-decoration: none; margin-top: 10px;">
+            Edit Profile
+        </a>
+    </div>
+    
+    {# Stats Card #}
+    <div style="flex: 2; min-width: 300px;">
+        <div style="background: #FEFCF8; padding: 20px; border-radius: 12px; border: 1px solid #E0D6C8; margin-bottom: 20px;">
+            <h3>Statistics</h3>
+            <p>Total Students: {{ students_count }}</p>
+            {# EXERCISE 1: Show access level based on role #}
+            <p>Your Access Level: {% if user.is_admin() %}<strong style="color: green;">Administrator (Full Access)</strong>{% else %}<strong style="color: blue;">Viewer (Read Only)</strong>{% endif %}</p>
+        </div>
+        
+        <div style="background: #FEFCF8; padding: 20px; border-radius: 12px; border: 1px solid #E0D6C8;">
+            <h3>Quick Actions</h3>
+            <ul>
+                <li><a href="{{ url_for('students') }}">View Students</a></li>
+                {# EXERCISE 1: Conditional quick action #}
+                {% if user.is_admin() %}
+                    <li><a href="{{ url_for('students') }}">Manage Students (Add/Delete)</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
